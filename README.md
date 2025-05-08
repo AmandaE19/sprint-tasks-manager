@@ -1,8 +1,6 @@
-# 🚀 SprintTasker - Backend (NestJS + GraphQL)
+# 🚀 SprintTasker - Backend (NestJS + REST API)
 
-**SprintTasker** é o backend de uma plataforma de **gestão de tarefas com metodologia Scrum**. O sistema organiza tarefas por **sprints**, e cada sprint possui um quadro **Kanban** com colunas `To Do`, `Doing` e `Done`.
-
-Este repositório representa o backend criado com **NestJS** e **GraphQL (Apollo Server)** no modelo code-first.
+**SprintTasker** é o backend de uma plataforma de gestão de tarefas com base na metodologia **Scrum**. O sistema organiza tarefas por sprints, cada uma com seu próprio quadro Kanban dividido em **To Do**, **Doing** e **Done**.
 
 ---
 
@@ -10,78 +8,43 @@ Este repositório representa o backend criado com **NestJS** e **GraphQL (Apollo
 
 ### Funcionalidades principais
 
-- 📆 **Sprints**: Cada sprint é uma instância com data de início/fim, e possui seu próprio quadro Kanban.
-- ✅ **Tarefas**: São associadas a uma sprint, possuem status, responsável e descrição.
-- 👥 **Usuários**: Existem dois tipos:
-  - `COMMON`: Pode visualizar e mover tarefas para si.
-  - `ADMIN`: Tem as permissões de COMMON, e também pode criar, editar e excluir tarefas e sprints.
+- **📆 Sprints**  
+  Cada sprint tem data de início e fim, e seu próprio quadro de tarefas.
 
-### Páginas do sistema
+- **✅ Tarefas**  
+  Associadas a uma sprint, com status (`TODO`, `DOING`, `DONE`), responsável e descrição.
 
-- **Página 1 (todos os usuários)**:
-  - Visualizar sprints ativas ou inativas (utilizar filtros).
-  - Somente tarefas da sprint ativa podem ter status alterados por um usuário `COMMON`.
-  - Para cada sprint, visualizar tarefas divididas por status (`To Do`, `Doing`, `Done`).
-  - Marcar tarefas como `Doing` ou `Done`.
-  - Atribuir uma tarefa para si.
-
-- **Página 2 (ADM apenas)**:
-  - Criar novas sprints.
-  - Criar, editar ou excluir tarefas de qualquer sprint.
+- **👥 Usuários**
+  - `COMMON`: Visualiza e movimenta tarefas para si.
+  - `ADMIN`: Pode criar, editar e excluir tarefas e sprints, além das permissões de COMMON.
 
 ---
 
-## ⚙️ Tecnologias utilizadas
+### 📄 Páginas esperadas
 
-- **NestJS** – Estrutura do backend.
-- **GraphQL (Apollo Server)** – API em GraphQL code-first.
-- **TypeScript** – Tipagem robusta.
-- **JWT (autenticação)** – Proteção de rotas (a implementar).
-- **MongoDB + Mongoose** – Banco de dados NoSQL.
-- **Class-validator** – Validação de dados.
-- **Bcrypt** – Hash de senhas.
+#### Página 1 - Todos os usuários
+- Visualizam sprints (ativas ou inativas) com filtros.
+- Visualizam tarefas organizadas por status.
+- Podem mover tarefas da sprint ativa para *Doing* ou *Done*.
+- Podem se atribuir a tarefas.
+
+#### Página 2 - Apenas ADMIN
+- Criam novas sprints.
+- Criam, editam e excluem tarefas de qualquer sprint.
 
 ---
 
-## 🧾 Estrutura da API GraphQL
+## ⚙️ Tecnologias Utilizadas
 
-### 📌 Tipos principais (Schemas)
+- [NestJS](https://nestjs.com/) – Framework principal do backend
+- **REST API** – Comunicação via HTTP
+- **TypeScript** – Tipagem robusta
+- **MongoDB + Mongoose** – Banco de dados NoSQL
+- **JWT** – Autenticação e controle de acesso
+- **Bcrypt** – Hash de senhas
+- **Class-validator** – Validação de dados
 
-#### `User`
-```graphql
-type User {
-  id: ID!
-  name: String!
-  email: String!
-  role: Role! # ADMIN | COMMON
-}
-```
-
-#### `Sprint`
-```graphql
-type Sprint {
-  id: ID!
-  name: String!
-  initialDate: String!
-  finalDate: String!
-  tasks: [Task!]!
-}
-```
-
-#### `Task`
-```graphql
-type Task {
-  id: ID!
-  name: String!
-  description: String!
-  status: String! # TODO | DOING | DONE
-  assignedTo: User
-  sprint: Sprint!
-}
-```
-
-## 🧾 Queries
-Descrever (a fazer)
+---
 
 ## 🔐 Autenticação (a implementar)
 
@@ -89,9 +52,9 @@ Descrever (a fazer)
 - Recebimento de token JWT.
 - Middleware que protege rotas de acordo com o `role` do usuário (`ADMIN` ou `COMMON`).
 - Exemplo esperado de fluxo:
-  1. Usuário envia email e senha via mutation `login`.
+  1. Usuário envia email e senha via HTTP para o endpoint `auth/login`.
   2. Backend valida e retorna um JWT.
-  3. Esse token é incluído no header `Authorization` nas próximas requisições GraphQL.
+  3. Esse token é incluído no header `Authorization` nas próximas requisições.
   4. O backend valida o token e aplica regras de acesso (guards).
 
 ---
@@ -100,10 +63,10 @@ Descrever (a fazer)
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/seu-usuario/sprint-tasker-backend.git
+git clone https://github.com/seu-usuario/sprint-tasker-manager.git
 
 # Acesse o diretório
-cd sprint-tasker-backend
+cd sprint-tasker-manager
 
 # Instale as dependências
 npm install
@@ -112,13 +75,5 @@ npm install
 npm run start:dev
 
 # O servidow GraphQL estará disponível em:
-http://localhost:3000/graphql
+http://localhost:8080/
 ```
-
-## 🔗 Integração com o frontend
-
-Para consumir essa API GraphQL no frontend (React, Vue, etc.), recomenda-se utilizar:
-
-- `@apollo/client` – Cliente Apollo para GraphQL
-- `graphql` – Biblioteca base
-- `graphql-tag` – Para uso com templates de queries
