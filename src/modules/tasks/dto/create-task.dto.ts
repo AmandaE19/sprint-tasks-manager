@@ -11,7 +11,7 @@ export class CreateTaskDto {
   status: string;
 
   @IsOptional()
-  @IsMongoId()
+  @IsString()
   assignedTo?: string;
 
   @IsMongoId()
